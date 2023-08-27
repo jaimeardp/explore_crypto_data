@@ -2,7 +2,7 @@ import requests
 from utils.wrap_datetimes import convert_dt_to_timestamp
 from utils.constants import config_vars
 
-_ENDPOINT_API = "https://api.coingecko.com/api/v3/"
+_ENDPOINT_API = f"{config_vars.get('API_CRYPTO')}/api/v3/"
 
 _proxy = {
     'https': f"{config_vars.get('USERNAME_PROXY')}:{config_vars.get('PASSWORD_PROXY')}@{config_vars.get('SERVER_PROXY')}"
