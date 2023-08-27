@@ -1,6 +1,7 @@
+import json
 import pandas as pd
+#from kafka_config.kafka_pipe import send_message_to_kafka, flush_kafka
 from utils.api import get_crypto_data, get_crypto_price_historical
-
 
 def _get_data(crypto_to_ingest, intervals):
   ds_row = {}
@@ -23,18 +24,18 @@ def get_data_formated(crypto_to_ingest, intervals):
   
   info_crypto = get_crypto_data(crypto_to_ingest)
 
-  print(f" reading data for {crypto_to_ingest} ")
+  print(f" reading data for {crypto_to_ingest} - {info_crypto} ")
 
   ds_row = _get_data(crypto_to_ingest, intervals)
 
   print(f" extracted historical prices for {crypto_to_ingest} ")
 
-    
   for ts, v in ds_row.items():
-    #print("ingesting: ", ts)
     # ds_row = {ts : {metric1 : [value], metric2 : [value]}}} }}
-    out_data.append({**v, **info_crypto})
-    #print(out_data)
+    price_and_info = {**v, **info_crypto}
+    out_data.append(price_and_info)
+
+    #send_message_to_kafka("crypto_prices", payload_to_kafka)
 
   # desactivate index column
   df = pd.DataFrame(out_data)

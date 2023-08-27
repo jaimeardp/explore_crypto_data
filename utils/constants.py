@@ -1,4 +1,7 @@
 import os
+from dotenv import load_dotenv
+
+load_dotenv()
 
 _suffix = "_me"
 
@@ -12,3 +15,17 @@ config_vars = {
     "PASSWORD_PROXY": f'{os.environ["PASSWORD_PROXY"]}',
     "API_CRYPTO": f'{os.environ["API_CRYPTO"]}',
 }
+
+def read_ccloud_config(config_file):
+    """
+    convert a config file .properties into a dictionary
+    """
+    conf = {}
+    with open(config_file) as fh:
+        for line in fh:
+            line = line.strip()
+            if len(line) != 0 and line[0] != "#":
+                parameter, value = line.strip().split('=', 1)
+                conf[parameter] = value.strip()
+    print(conf)
+    return conf

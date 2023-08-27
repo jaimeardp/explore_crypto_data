@@ -1,2 +1,8 @@
 .pythonlibs/**
 *.pyc
+.env
+*.ovpn
+kafka_config/**
+docker-compose.yaml
+client.properties
+```
