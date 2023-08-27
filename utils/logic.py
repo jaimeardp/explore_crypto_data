@@ -7,7 +7,7 @@ def _get_data(crypto_to_ingest, intervals):
   for start_dt, end_dt in zip(intervals[:-1], intervals[1:]):
     #print(start_dt, end_dt)
     response = get_crypto_price_historical(crypto_to_ingest, "usd", start_dt, end_dt)
-    print(response)
+    #print(response)
     for metric, values in response.items():
       for value in values:
         #print(value)
@@ -23,7 +23,12 @@ def get_data_formated(crypto_to_ingest, intervals):
   
   info_crypto = get_crypto_data(crypto_to_ingest)
 
+  print(f" reading data for {crypto_to_ingest} ")
+
   ds_row = _get_data(crypto_to_ingest, intervals)
+
+  print(f" extracted historical prices for {crypto_to_ingest} ")
+
     
   for ts, v in ds_row.items():
     #print("ingesting: ", ts)

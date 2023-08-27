@@ -11,9 +11,9 @@ session = boto3.Session(aws_access_key_id=config_vars.get('AWS_ACCESS_KEY_ID'),\
                         aws_secret_access_key=config_vars.get('AWS_SECRET_ACCESS_KEY'))
 
 
-CRYPTO_TO_INGEST = "bitcoin"
+CRYPTO_TO_INGEST = "ethereum"
 
-intervals = gen_intervales_date_day("2023-07-01", "2023-07-31", "5d")
+intervals = gen_intervales_date_day("2023-05-01", "2023-08-25", "5d")
 
 df = get_data_formated(CRYPTO_TO_INGEST, intervals)
 
