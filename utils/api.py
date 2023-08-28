@@ -5,7 +5,7 @@ from utils.constants import config_vars
 _ENDPOINT_API = f"{config_vars.get('API_CRYPTO')}/api/v3"
 
 _proxy = {
-    'https': f"{config_vars.get('USERNAME_PROXY')}:{config_vars.get('PASSWORD_PROXY')}@{config_vars.get('SERVER_PROXY')}"
+    'https': f"{config_vars.get('USERNAME_PROXY')}:{config_vars.get('PASSWORD_PROXY')}@",
 }
 
 def get_crypto_data(crypto_name):
@@ -24,12 +24,14 @@ def get_crypto_data(crypto_name):
   data_crypto['market_cap_rank'] = str(data.get("market_cap_rank", ""))
   return data_crypto
 
-def get_crypto_price_historical(crypto_name, currency, start_dt=None, end_dt=None):
+def get_crypto_price_historical(crypto_name, currency, proxy_id, start_dt=None, end_dt=None):
   assert start_dt is not None and end_dt is not None, "start_dt and end_dt is None"
   start_dt = convert_dt_to_timestamp(start_dt)
   end_dt = convert_dt_to_timestamp(end_dt)
   url = f"{_ENDPOINT_API}/coins/{crypto_name}/market_chart/range?vs_currency={currency}&from={start_dt}&to={end_dt}&precision=2"
   print(_proxy)
-  response = requests.get(url, proxies=_proxy)
+  print("using proxy: ", f'{_proxy.get("https")}{config_vars.get(f"SERVER_PROXY_{proxy_id}")}')
+  proxy_to_choice = config_vars.get(f'SERVER_PROXY_{proxy_id}')
+  response = requests.get(url, proxies={ "https": f'{_proxy.get("https")}{proxy_to_choice}'})
   assert response.status_code == 200, f"Error in status code {response.status_code}"
   return response.json()

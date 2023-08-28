@@ -5,4 +5,5 @@
 kafka_config/**
 docker-compose.yaml
 client.properties
+crypto_prices/**
 ```
