@@ -32,6 +32,7 @@ def get_crypto_price_historical(crypto_name, currency, proxy_id, start_dt=None, 
   print(_proxy)
   print("using proxy: ", f'{_proxy.get("https")}{config_vars.get(f"SERVER_PROXY_{proxy_id}")}')
   proxy_to_choice = config_vars.get(f'SERVER_PROXY_{proxy_id}')
-  response = requests.get(url, proxies={ "https": f'{_proxy.get("https")}{proxy_to_choice}'})
+  response = requests.get(url, proxies={ "https": f'{_proxy.get("https")}{proxy_to_choice}'}, stream=True)
+  print(response.raw._connection.sock.getpeername())
   assert response.status_code == 200, f"Error in status code {response.status_code}"
   return response.json()

@@ -12,11 +12,13 @@ _session = boto3.Session(aws_access_key_id=config_vars.get('AWS_ACCESS_KEY_ID'),
 
 def task_get_data(crypto, start_date, end_date, queue):
 
+    print(f"task get data {crypto} - {start_date} - {end_date} started")
+
     try:
 
         proxy_id = queue.get()
 
-        intervals = gen_intervales_date_day(start_date, end_date, "5d")
+        intervals = gen_intervales_date_day(start_date, end_date, "10d")
 
         fh = _session.client("firehose", region_name="us-east-1")
 
@@ -29,10 +31,8 @@ def task_get_data(crypto, start_date, end_date, queue):
         #             partition_cols=["name", "year", "month", "day", "hour"],
         #             boto3_session=_session)
     except Exception as e:
-        #print(e)
         error = ''.join(traceback.format_exception(None, e, e.__traceback__))
-
-        #print("error main process: ", error)
+        print("error main process: ", error)
         return "failed with proxy_id: " + str(proxy_id)
     finally:
         queue.put(proxy_id)

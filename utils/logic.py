@@ -1,11 +1,30 @@
+import time
 import json
+import random
+import queue
 import pandas as pd
 from utils.firehose_pipe import send_firehose_batch
 from utils.api import get_crypto_data, get_crypto_price_historical
 
+# convert list to queue
+def _list_to_queue(list_to_convert):
+  queue_to_return = queue.Queue()
+  for item in list_to_convert:
+    queue_to_return.put(item)
+  return queue_to_return
+
 def _get_data(crypto_to_ingest, intervals, proxy_id):
   ds_row = {}
-  for start_dt, end_dt in zip(intervals[:-1], intervals[1:]):
+  intervals_generated = list(zip(intervals[:-1], intervals[1:]))
+  print(f" numbers of request to api server {len(intervals_generated)}")
+  # convert list to queue
+  list_to_queue = _list_to_queue(intervals_generated)
+  print(list_to_queue.qsize())
+  # raise Exception("stop")
+  while not list_to_queue.empty():
+    start_dt, end_dt = list_to_queue.get()
+    time.sleep(random.randrange(1, 3))
+    #for start_dt, end_dt in intervals_generated:
     #print(start_dt, end_dt)
     response = get_crypto_price_historical(crypto_to_ingest, "usd", proxy_id, start_dt, end_dt)
     #print(response)
@@ -54,13 +73,17 @@ def get_data_formated(crypto_to_ingest, intervals, proxy_id, firehose_client):
 
     out_data_to_firehose.append({"Data": (json.dumps(row.to_dict()))})
 
-    if i+1 % 50 == 0:
+    if len(out_data_to_firehose) >= 50:
+
+      print(f" messages to send to firehose: {len(out_data_to_firehose)}")
 
       send_firehose_batch(out_data_to_firehose, firehose_client)
 
       out_data_to_firehose = []
 
   if len(out_data_to_firehose) > 0:
+
+    print(f" messages to send to firehose: {len(out_data_to_firehose)}")
 
     send_firehose_batch(out_data_to_firehose, firehose_client)
 

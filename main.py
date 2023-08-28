@@ -11,13 +11,13 @@ session = boto3.Session(aws_access_key_id=config_vars.get('AWS_ACCESS_KEY_ID'),\
 
 
 cryptos_to_ingest = [
-    {"name": "bitcoin", "start_date": "2023-07-01", "end_date": "2023-07-15"},
-    {"name": "ethereum", "start_date": "2023-07-01", "end_date": "2023-07-15"},
-    {"name": "dogecoin", "start_date": "2023-07-01", "end_date": "2023-07-15"},
-    {"name": "cardano", "start_date": "2023-07-01", "end_date": "2023-07-15"},
-    {"name": "polkadot", "start_date": "2023-07-01", "end_date": "2023-07-15"},
-    {"name": "litecoin", "start_date": "2023-07-01", "end_date": "2023-07-15"},
-    {"name": "celer-network", "start_date": "2023-07-01", "end_date": "2023-07-15"}
+    {"name": "bitcoin", "start_date": "2023-02-01", "end_date": "2023-02-28"},
+    {"name": "ethereum", "start_date": "2023-02-01", "end_date": "2023-02-28"},
+    {"name": "dogecoin", "start_date": "2023-02-01", "end_date": "2023-02-28"},
+    {"name": "cardano", "start_date": "2023-02-01", "end_date": "2023-02-28"},
+    {"name": "polkadot", "start_date": "2023-02-01", "end_date": "2023-02-28"},
+    {"name": "litecoin", "start_date": "2023-02-01", "end_date": "2023-02-28"},
+    {"name": "celer-network", "start_date": "2023-02-01", "end_date": "2023-02-28"}
 ]
 
 if __name__ == "__main__":
@@ -28,15 +28,17 @@ if __name__ == "__main__":
 
         queue = manager.Queue()
 
-        queue.put(0)
-        queue.put(1)
+        queue.put(6)
+        queue.put(5)
         queue.put(2)
         queue.put(3)
         queue.put(4)
+        queue.put(1)
+        queue.put(0)
 
         start = time.time()
 
-        with concurrent.futures.ProcessPoolExecutor(max_workers=10) as executor:
+        with concurrent.futures.ProcessPoolExecutor(max_workers=3) as executor:
 
             for crypto_dict in cryptos_to_ingest:
 
